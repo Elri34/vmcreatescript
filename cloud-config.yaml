@@ -1,0 +1,30 @@
+#cloud-config
+system_info:
+  default_user:
+    name: vm13
+    home: /home/vm13
+    sudo: ALL=(ALL) NOPASSWD:ALL
+password: 123456
+chpasswd: { expire: False }
+hostname: vm13 
+ssh_authorized_keys:
+- ssh-ed25519 AAAsfdfNzasdfsdZDIgfsdgsdTE5FAKEFAKEFAKEFAKE-FAKE-FAKEWsXhHL0ah2QUUbt1f ps@controller
+
+
+# if you want to allow SSH with password, set this to true
+ssh_pwauth: True
+
+
+
+# list of packages to install after the VM comes up
+package_upgrade: true
+packages:
+- nfs-common
+
+#run the commands after the first install, the last command is saving VM ip into /tmp/my-ip file
+runcmd:
+- sudo systemctl enable iscsid
+- sudo systemctl start iscsid
+- sudo systemctl start apache2
+- ip addr show eno1  |grep -oP '^\s+inet\s+\K[^/]+' |tee /tmp/my-ip
+- echo "KIRILL PRIVET"
